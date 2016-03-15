@@ -1,0 +1,58 @@
+ <div class="row">
+    {% for funeral in funerals.object_list %}
+            <div class="col-lg-12 funeral-post">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>
+                            {{ funeral.name }}
+                            {% if request.user.is_authenticated and funeral.author == request.user %}
+                            <a href="javascript:void(0);" class="pull-left small delete-post"
+                               data-postid="{{ funeral.id }}">
+                                <span class="glyphicon glyphicon-remove text-danger"></span>
+                            </a>
+                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+                                <a href="{% url 'funeral:update' funeral.id %}" class="pull-left small">
+                                <span class="glyphicon glyphicon-pencil text-warning">&nbsp;</span>
+                            </a>
+                            {% endif %}
+                        </h4>
+                        <hr>
+                        {{ funeral.body }}
+
+                        <hr>
+                        <div class="tags">
+                            <span class="glyphicon glyphicon-tags"></span>
+                            {% for tag in funeral.place_tags.all %}
+                            <a href="{% url 'funeral:tag_funerals' tag.name %}"><span class="badge">{{ tag }}</span></a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                    <div class="panel-footer text-left">
+                        <h6>اضيف بواسطة:
+                            <small><a href="#">{{ funeral.author.get_full_name }}</a></small>
+                            اضيف منذ:
+                            <small>{{ funeral.create_date|timesince }}</small>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% if funerals.has_other_pages %}
+    <div class="row">
+        <div class="container">
+            <nav>
+                <ul class="pagination pagination-md pull-left">
+                    {% for i in funerals.paginator.page_range %}
+                        {% ifequal i funerals.number %}
+                        <li class="active"><a href="javascript:void()">{{ i }}</a></li>
+                        {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endifequal %}
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}

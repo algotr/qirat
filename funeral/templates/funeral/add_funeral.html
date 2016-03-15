@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}اظافة جنازة{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    بيانات المتوفي
+                </div>
+                <div class="panel-body">
+                {% for error in form.errors %}
+                {{ error }}
+                {% endfor %}
+
+                {% ifequal current_url 'funeral:update'%}
+                <form class="form" action="{% url current_url funeral_id %}" method="post">
+                    {% else %}
+                    <form class="form" action="{% url current_url %}" method="post">
+                {% endifequal %}
+
+                        {% csrf_token %}
+                        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                            <label for="name" class="sr-only">اسم المتوفي</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <ul class="text-danger">
+                                    {% for error in form.name.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                        </div>
+                        <div class="form-group {% if form.body.errors %}has-error{% endif %}">
+                            <label for="body" class="sr-only">بيانات صلاة الجنازة والدفن</label>
+                            {{ form.body }}
+                            {% if form.body.errors %}
+                                <ul class="text-danger">
+                                    {% for error in form.body.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="form-group {% if form.place_tags.errors %}has-error{% endif %}">
+                            {{ form.place_tags.label }}
+                            {{ form.place_tags }}
+                            {% if form.place_tags.errors %}
+                                <ul class="text-danger">
+                                    {% for error in form.place_tags.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <button type="submit" name="add" class="btn btn-primary pull-left">حفظ</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    {% include 'includes/funerals.html' %}
+{% endblock %}

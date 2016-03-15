@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}
+    نتائج البحث
+{% endblock %}
+
+{% block outer_content %}
+    <div class="jumbotron">
+        <h3>نتائج البحث عن ({{ query }})</h3>
+    </div>
+    {% block content %}
+        {% if query %}
+            <div class="row">
+                {% for result in page.object_list %}
+                    <div class="col-lg-12 funeral-post">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <h4>
+                                    {{ result.object.name }}
+                                    {% if request.user.is_authenticated and result.object.author == request.user %}
+                                        <a href="javascript:void(0);" class="pull-left small delete-post"
+                                           data-postid="{{ result.object.id }}">
+                                            <span class="glyphicon glyphicon-remove text-danger"></span>
+                                        </a>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"/>
+                                        <a href="{% url 'funeral:update' result.object.id %}" class="pull-left small">
+                                            <span class="glyphicon glyphicon-pencil text-warning">&nbsp;</span>
+                                        </a>
+                                    {% endif %}
+                                </h4>
+                                <hr>
+                                {{ result.object.body }}
+
+                                <hr>
+                                <div class="tags">
+                                    <span class="glyphicon glyphicon-tags"></span>
+                                    {% for tag in result.object.place_tags.all %}
+                                        <a href="{% url 'funeral:tag_funerals' tag.name %}"><span
+                                                class="badge">{{ tag }}</span></a>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                            <div class="panel-footer text-left">
+                                <h6>اضيف بواسطة:
+                                    <small><a href="#">{{ result.object.author.get_full_name }}</a></small>
+                                    اضيف منذ:
+                                    <small>{{ result.object.create_date|timesince }}</small>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>ﻻتوجد نتائج للبحث</p>
+                {% endfor %}
+            </div>
+
+
+            {% if page.has_other_pages %}
+                <div class="row">
+                    <div class="container">
+                        <nav>
+                            <ul class="pagination pagination-md pull-left">
+                                {% for i in page.paginator.page_range %}
+                                    {% ifequal i page.number %}
+                                        <li class="active"><a href="javascript:void();">{{ i }}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endifequal %}
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            {% endif %}
+
+
+        {% endif %}
+    {% endblock %}
+{% endblock %}

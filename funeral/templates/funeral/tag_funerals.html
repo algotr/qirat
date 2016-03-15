@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    عرض الجنائز في منطقة  ({{ tag_name }})
+{% endblock %}
+
+{% block outer_content %}
+    <div class="jumbotron">
+    <h3>عرض الجنائز في منطقة  ({{ tag_name }})</h3>
+    </div>
+    {% block content %}
+        {% include 'includes/funerals.html' %}
+    {% endblock %}
+{% endblock %}
+
