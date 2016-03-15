@@ -21,7 +21,7 @@
 بعد عملية تنزيل الملفات يجب عليك تنفيذ التالي
 
 ```sh
-$ pip install -r requirements
+$ pip install -r requirements.txt
 ```
 
 ```sh
